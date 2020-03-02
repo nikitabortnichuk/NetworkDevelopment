@@ -1,11 +1,5 @@
 package com.kson.calculator.server;
 
-import static com.kson.util.StringUtil.removeSpaces;
-
-import com.kson.calculator.service.Translator;
-import com.kson.calculator.util.StringUtil;
-import com.kson.service.Translator;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,51 +8,104 @@ import java.net.Socket;
 
 public class MyServer implements Runnable {
 
-    private Socket socket;
+    Socket socket;
 
     public MyServer(Socket socket) {
         this.socket = socket;
     }
 
-
     @Override
     public void run() {
+
         try (BufferedReader socketInputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), false)) {
+             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true)) {
 
-            printWriter.println("Hello! It is simple translator where we use TCP Socket. ");
-            printWriter.flush();
-            printWriter.println("Write code of language from which you want to translate, ");
-            printWriter.flush();
-            printWriter.println("than code of language to which you want to translate and your word.");
-            printWriter.flush();
-            printWriter.println("Example: en ru Hello");
-            printWriter.println();
-            printWriter.flush();
+            printWriter.println("Hello! This online calculator. You can write an expression and get the result.");
 
-            String input;
-            while ((input = socketInputReader.readLine()) != null) {
-                printWriter.println("Translating...");
-                System.out.println("\nReceived: " + input);
+            printWriter.println("For example: 7 * 8 . Type \"exit\" to end a program.");
 
+            String message;
+            while ((message = socketInputReader.readLine()) != null) {
 
+                System.out.print("received: " + message + "\n");
 
-                String translated = "Translated";
-//                String translated = getTranslatedWord(input);
-                System.out.println("Translate: " + translated);
-                printWriter.println("Translate: " + translated + System.lineSeparator());
-                printWriter.flush();
+                printWriter.println("Solving...");
+
+                try {
+                    String solution = solve(message);
+                    printWriter.println("Solution: " + solution);
+                    System.out.println("sent: " + solution);
+                } catch (Exception e) {
+                    printWriter.println(e.getMessage());
+                }
+                printWriter.println();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    private String getTranslatedWord(String input) {
-        String[] inputWords = StringUtil.removeSpaces(input).split("\\s");
-        System.out.println("From language: " + inputWords[0]);
-        System.out.println("To language: " + inputWords[1]);
-        System.out.println("Word: " + inputWords[2]);
-        return Translator.translate(inputWords[0], inputWords[1], inputWords[2]);
+    public static String[] parseExpression(String expression) {
+        if (!expression.matches("\\d+\\s[+\\-*/]\\s\\d+")) {
+            throw new RuntimeException("Wrong input");
+        }
+        return expression.split(" ");
+    }
+
+    private String solve(String expression) {
+
+        String[] characters = parseExpression(expression);
+
+        double firstParameter = Double.parseDouble(characters[0]);
+
+        String arithmetic = characters[1];
+
+        double secondParameter = Double.parseDouble(characters[2]);
+
+        return String.valueOf(calculateByArithmetic(arithmetic, firstParameter, secondParameter));
+    }
+
+    private double calculateByArithmetic(String arithmetic, double firstParam, double secondParam) {
+
+        double result = 0;
+
+        switch (arithmetic) {
+            case "+":
+                result = add(firstParam, secondParam);
+                break;
+            case "-":
+                result = sub(firstParam, secondParam);
+                break;
+            case "*":
+                result = multi(firstParam, secondParam);
+                break;
+            case "/":
+                result = div(firstParam, secondParam);
+                break;
+        }
+
+        return result;
+
+    }
+
+    private double add(double firstParam, double secondParam) {
+        return firstParam + secondParam;
+    }
+
+    private double sub(double firstParam, double secondParam) {
+        return firstParam - secondParam;
+    }
+
+    private double multi(double firstParam, double secondParam) {
+        return firstParam * secondParam;
+    }
+
+    private double div(double firstParam, double secondParam) {
+        if (secondParam == 0) {
+            throw new RuntimeException("Division by zero!");
+        }
+        return firstParam / secondParam;
     }
 }

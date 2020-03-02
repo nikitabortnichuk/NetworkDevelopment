@@ -1,4 +1,4 @@
-package com.kson.calculator.service;
+package com.kson.translator.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

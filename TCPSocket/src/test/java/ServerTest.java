@@ -1,4 +1,4 @@
-import com.kson.translate.server.MyServer;
+import com.kson.calculator.server.MyServer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;

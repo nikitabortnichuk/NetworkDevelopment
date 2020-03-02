@@ -1,4 +1,4 @@
-package com.kson.calculator.util;
+package com.kson.translator.util;
 
 public class StringUtil {
 

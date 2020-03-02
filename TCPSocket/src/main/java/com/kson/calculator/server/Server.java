@@ -5,15 +5,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-
-    public static void main(String[] args) throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(9092)) {
-            while (true) {
-                System.out.println("Start server");
-
+    public static void main(String[] args) {
+        try(ServerSocket serverSocket = new ServerSocket(9091)){
+            while (true){
                 Socket socket = serverSocket.accept();
                 new Thread(new MyServer(socket)).start();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

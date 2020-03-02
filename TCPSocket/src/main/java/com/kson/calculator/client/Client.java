@@ -1,37 +1,34 @@
 package com.kson.calculator.client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import lombok.SneakyThrows;
 
 public class Client {
 
-    @SneakyThrows
-    public static void main(String[] args) {
-        Socket socket = new Socket();
-        socket.connect(new InetSocketAddress("169.254.190.155", 9092));
+    public static void main(String[] args) throws IOException {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("127.0.0.1", 9091));
+            InputStream inputStream = socket.getInputStream();
 
-        BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
+            BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
 
-        BufferedReader socketReader = new BufferedReader(
-                new InputStreamReader(socket.getInputStream()));
+            BufferedReader socketReader = new BufferedReader(new InputStreamReader(inputStream));
 
-        PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-
-        printMessageFromSocket(socketReader);
-
-        String userInput;
-        while ((userInput = terminalReader.readLine()) != null) {
-            printWriter.println(userInput);
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 
             printMessageFromSocket(socketReader);
-        }
 
+            String userInput;
+
+            while ((userInput = terminalReader.readLine()) != null) {
+                printWriter.println(userInput);
+
+                printMessageFromSocket(socketReader);
+            }
+        }
     }
+
 
     private static void printMessageFromSocket(BufferedReader socketReader) throws IOException {
         String line;
@@ -42,4 +39,5 @@ public class Client {
             System.out.println(line);
         }
     }
+
 }
