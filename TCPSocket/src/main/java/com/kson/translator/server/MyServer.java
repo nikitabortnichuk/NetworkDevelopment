@@ -24,30 +24,24 @@ public class MyServer implements Runnable {
     @Override
     public void run() {
         try (BufferedReader socketInputReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), false)) {
+             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true)) {
 
-            printWriter.println("Hello! It is simple translator where we use TCP Socket. ");
-            printWriter.flush();
-            printWriter.println("Write code of language from which you want to translate, ");
-            printWriter.flush();
-            printWriter.println("than code of language to which you want to translate and your word.");
-            printWriter.flush();
-            printWriter.println("Example: en ru Hello");
+            printWriter.println("Hello! It is simple translator where we use TCP Socket. \n"
+                    + "Write code of language from which you want to translate, "
+                    + "than code of language to which you want to translate and your word. \n"
+                    + "Example: en ru Hello");
             printWriter.println();
-            printWriter.flush();
 
             String input;
             while ((input = socketInputReader.readLine()) != null) {
                 printWriter.println("Translating...");
                 System.out.println("\nReceived: " + input);
 
-
-
                 String translated = "Translated";
 //                String translated = getTranslatedWord(input);
+
                 System.out.println("Translate: " + translated);
                 printWriter.println("Translate: " + translated + System.lineSeparator());
-                printWriter.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();

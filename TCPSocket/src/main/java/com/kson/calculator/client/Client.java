@@ -22,6 +22,11 @@ public class Client {
             String userInput;
 
             while ((userInput = terminalReader.readLine()) != null) {
+
+                if(userInput.equalsIgnoreCase("exit")){
+                    break;
+                }
+
                 printWriter.println(userInput);
 
                 printMessageFromSocket(socketReader);

@@ -7,6 +7,7 @@ import java.net.Socket;
 public class Server {
     public static void main(String[] args) {
         try(ServerSocket serverSocket = new ServerSocket(9091)){
+            System.out.println("Calculator Server");
             while (true){
                 Socket socket = serverSocket.accept();
                 new Thread(new MyServer(socket)).start();

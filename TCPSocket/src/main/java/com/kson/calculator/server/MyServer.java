@@ -21,8 +21,8 @@ public class MyServer implements Runnable {
              PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true)) {
 
             printWriter.println("Hello! This online calculator. You can write an expression and get the result.");
-
             printWriter.println("For example: 7 * 8 . Type \"exit\" to end a program.");
+            printWriter.println();
 
             String message;
             while ((message = socketInputReader.readLine()) != null) {
