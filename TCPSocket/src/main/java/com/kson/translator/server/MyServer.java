@@ -1,10 +1,10 @@
 package com.kson.translator.server;
 
-import static com.kson.util.StringUtil.removeSpaces;
+import static com.kson.translator.util.StringUtil.removeSpaces;
 
 import com.kson.translator.service.Translator;
 import com.kson.translator.util.StringUtil;
-import com.kson.service.Translator;
+import com.kson.translator.service.Translator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
