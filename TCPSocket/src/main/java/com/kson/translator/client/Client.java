@@ -13,7 +13,7 @@ public class Client {
     @SneakyThrows
     public static void main(String[] args) {
         Socket socket = new Socket();
-        socket.connect(new InetSocketAddress("127.0.0.1", 9092));
+        socket.connect(new InetSocketAddress("192.168.43.194", 9092));
 
         BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
 
